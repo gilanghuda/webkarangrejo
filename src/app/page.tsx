@@ -1,103 +1,220 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const images = [
+    '/images/home1.png',
+    '/images/home2.png',
+    '/images/home3.png',
+    '/images/home4.png',
+  ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Ganti gambar setiap 5 detik
+
+    return () => clearInterval(interval); // Bersihkan interval saat komponen unmount
+  }, [images.length]);
+
+  return (
+    <>
+      <Navbar />
+      
+      {/* Home Section */}
+      <section id="home" className="relative min-h-screen pt-[123px] bg-gray-50">
+        <div className="absolute inset-0">
+          {images.map((src, index) => (
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              key={src}
+              src={src}
+              alt={`Pemandangan Desa Karangrejo ${index + 1}`}
+              fill
+              className={`object-cover transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+              priority={index === 0} // Prioritas untuk gambar pertama agar dimuat lebih cepat
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          ))}
+          <div className="absolute inset-0 bg-black/50" /> {/* Overlay untuk keterbacaan */}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <div className="relative container mx-auto px-6 py-16 text-left text-white">
+          <h2 className="text-5xl font-bold mb-3 font-sans">
+            Website Resmi Desa Karangrejo
+          </h2>
+          <p className="text-2xl text-gray-200 font-bold font-sans">
+            Sumber informasi terbaru tentang pemerintahan di Desa Karangrejo
+          </p>
+        </div>
+      </section>
+
+      {/* Profil Section */}
+      <section id="profil" className="bg-white py-16">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold text-center mb-12 font-sans">Profil Desa</h2>
+
+          {/* Sejarah Desa */}
+          <div className="mb-16">
+            <div className="flex flex-col md:flex-row items-start gap-8">
+              <div className="w-60 h-60 relative flex-shrink-0">
+                <Image
+                  src="/logo-desa.png"
+                  alt="Logo Desa Karangrejo"
+                  width={300}
+                  height={300}
+                  className="object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold mb-4 font-sans text-black">Sejarah Desa</h3>
+                <p className="text-gray-700 mb-6 font-sans text-justify">
+                  Pada masa penjajahan, wilayah Desa Karangrejo merupakan kebun karet milik perusahaan Belanda NV. Nederlands Indische Rubber Koffie Cultuur Maatschappij dengan status tanah Recht van Erfpacht. Lahan ini terbagi dalam tiga ampean: Karang Tanjung, Sumenur, dan Karangrejo. Setelah kemerdekaan, hak kelola asing dicabut oleh pemerintah melalui SK Menteri Pertanian dan Agraria pada 25 Mei 1964, sebagai bagian dari reforma agraria.
+                  <br />
+                  Karangrejo kemudian resmi menjadi desa melalui SK Gubernur Jawa Timur tahun 1968 dan SK Bupati Blitar tahun 1969. Kepala desa pertamanya adalah Bapak Sukemi, diikuti oleh beberapa pemimpin lain hingga kini dijabat oleh Bapak Imam Rohadi sejak 2023.
+                  <br />
+                  Struktur pemerintahan desa mengalami beberapa perubahan mengikuti kebijakan nasional, mulai dari sistem tradisional hingga sistem modern sesuai UU Desa. Istilah seperti Lurah, Carik, dan Kamituwo diganti menjadi Kepala Desa, Sekretaris, dan lainnya, mencerminkan penyesuaian administratif demi tata kelola desa yang lebih baik.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Peta Desa */}
+          <div className="mb-16">
+            <h3 className="text-4xl font-bold mb-4 font-sans text-black">Peta Desa</h3>
+            <div className="flex justify-center">
+              <Image
+                src="/images/peta-desa.png"
+                alt="Peta Desa Karangrejo"
+                width={1200}
+                height={1000}
+                className="object-contain rounded-lg shadow-md"
+              />
+            </div>
+            <p className="text-gray-700 mt-6 text-justify max-w-4xl mx-auto font-sans">
+              Desa Karangrejo terletak pada 7°21'–7°31' LS dan 110°10'–111°40' BT, dengan ketinggian sekitar 700 meter di atas permukaan laut. Secara fisik, wilayah desa ini terdiri dari pemukiman, lahan tegalan, sawah, dan kebun rakyat. Iklim di Desa Karangrejo ditandai dengan curah hujan rata-rata sekitar 8,50 mm per tahun, dengan 10 bulan hujan, suhu harian mencapai 28°C, dan kelembaban sekitar 57%. Curah hujan tertinggi biasanya terjadi pada bulan Desember. Secara administratif, desa ini berbatasan dengan beberapa desa, yaitu : Desa Modangan (Kecamatan Nglegok) di sebelah barat, Desa Sidodadi (Kecamatan Garum) di sebelah timur dan selatan, serta Perhutani Ngancar (Kabupaten Kediri) di sebelah utara.
+            </p>
+          </div>
+
+          {/* Visi dan Misi */}
+          <div className="mb-16">
+            <h3 className="text-2xl font-semibold mb-4 text-center font-sans">Visi dan Misi</h3>
+            <p className="text-gray-700 max-w-4xl mx-auto font-sans">
+              <strong>Visi:</strong> Menjadikan Desa Karangrejo sebagai desa yang maju, sejahtera, dan berbudaya dengan tata kelola pemerintahan yang transparan dan akuntabel.<br /><br />
+              <strong>Misi:</strong><br />
+              1. Meningkatkan kualitas infrastruktur desa untuk mendukung mobilitas dan ekonomi masyarakat.<br />
+              2. Mengembangkan potensi wisata dan budaya lokal untuk meningkatkan pendapatan desa.<br />
+              3. Memberdayakan masyarakat melalui pelatihan dan pendidikan untuk meningkatkan kesejahteraan.<br />
+              4. Menjaga kelestarian lingkungan dan sumber daya alam untuk generasi mendatang.
+            </p>
+          </div>
+
+          {/* Administrasi Penduduk */}
+          <div className="mb-16">
+            <h3 className="text-2xl font-semibold mb-4 text-center font-sans">Administrasi Penduduk</h3>
+            <p className="text-gray-700 max-w-4xl mx-auto font-sans">
+              Desa Karangrejo memiliki jumlah penduduk sekitar [masukkan jumlah penduduk] jiwa, terdiri dari [masukkan data demografi, misalnya laki-laki/perempuan]. Pelayanan administrasi penduduk mencakup pembuatan KTP, KK, akta kelahiran, akta kematian, dan surat keterangan lainnya. Pelaksanaan pelayanan dilakukan di Kantor Desa Karangrejo sesuai jam pelayanan yang telah ditentukan.
+            </p>
+          </div>
+
+          {/* Perangkat Desa */}
+          <div>
+            <h3 className="text-2xl font-semibold mb-4 text-center font-sans">Perangkat Desa Karangrejo</h3>
+            <p className="text-gray-700 max-w-4xl mx-auto font-sans">
+              Pemerintahan Desa Karangrejo dipimpin oleh Kepala Desa, Bapak Imam Rohadi, yang didukung oleh perangkat desa, termasuk:<br />
+              - <strong>Sekretaris Desa</strong>: [Nama Sekretaris Desa]<br />
+              - <strong>Kaur Keuangan</strong>: [Nama Kaur Keuangan]<br />
+              - <strong>Kaur Umum</strong>: [Nama Kaur Umum]<br />
+              - <strong>Kasi Pemerintahan</strong>: [Nama Kasi Pemerintahan]<br />
+              - <strong>Kasi Kesejahteraan</strong>: [Nama Kasi Kesejahteraan]<br />
+              Struktur ini memastikan pelaksanaan tugas pemerintahan, pembangunan, dan pelayanan masyarakat berjalan dengan baik.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Wisata Section */}
+      <section id="wisata" className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-6 py-16">
+          <h2 className="text-4xl font-bold text-center mb-8 font-sans">Wisata</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 font-sans">Destinasi Wisata 1</h3>
+              <p className="text-gray-700 font-sans">Deskripsi tempat wisata...</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 font-sans">Destinasi Wisata 2</h3>
+              <p className="text-gray-700 font-sans">Deskripsi tempat wisata...</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 font-sans">Destinasi Wisata 3</h3>
+              <p className="text-gray-700 font-sans">Deskripsi tempat wisata...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Berita Section */}
+      <section id="berita" className="min-h-screen bg-white">
+        <div className="container mx-auto px-6 py-16">
+          <h2 className="text-4xl font-bold text-center mb-8 font-sans">Berita</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <article className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-3 font-sans">Berita Terbaru 1</h3>
+              <p className="text-gray-600 text-sm mb-3 font-sans">21 Juli 2025</p>
+              <p className="text-gray-700 font-sans">Ringkasan berita atau artikel...</p>
+            </article>
+            <article className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-3 font-sans">Berita Terbaru 2</h3>
+              <p className="text-gray-600 text-sm mb-3 font-sans">20 Juli 2025</p>
+              <p className="text-gray-700 font-sans">Ringkasan berita atau artikel...</p>
+            </article>
+            <article className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-3 font-sans">Berita Terbaru 3</h3>
+              <p className="text-gray-600 text-sm mb-3 font-sans">19 Juli 2025</p>
+              <p className="text-gray-700 font-sans">Ringkasan berita atau artikel...</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* Kontak Section */}
+      <section id="kontak" className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-6 py-16">
+          <h2 className="text-4xl font-bold text-center mb-8 font-sans">Kontak</h2>
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 font-sans">Informasi Kontak</h3>
+              <div className="space-y-4">
+                <p className="flex items-center font-sans">
+                  <span className="font-semibold w-24">Alamat:</span>
+                  <span>Desa Karangrejo, Kabupaten Blitar, Jawa Timur</span>
+                </p>
+                <p className="flex items-center font-sans">
+                  <span className="font-semibold w-24">Telepon:</span>
+                  <span>(0342) xxx-xxxx</span>
+                </p>
+                <p className="flex items-center font-sans">
+                  <span className="font-semibold w-24">Email:</span>
+                  <span>info@desakarangrejo.go.id</span>
+                </p>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 font-sans">Jam Pelayanan</h3>
+              <div className="space-y-2">
+                <p className="font-sans"><span className="font-semibold">Senin - Jumat:</span> 08.00 - 16.00 WIB</p>
+                <p className="font-sans"><span className="font-semibold">Sabtu:</span> 08.00 - 12.00 WIB</p>
+                <p className="font-sans"><span className="font-semibold">Minggu:</span> Tutup</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
 }
