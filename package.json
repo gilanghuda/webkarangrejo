@@ -9,6 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^5.10.5",
+    "@mantine/hooks": "^5.10.5",
+    "@mantine/rte": "^5.10.5",
+    "@supabase/supabase-js": "^2.52.0",
+    "@tiptap/extension-bold": "^3.0.7",
+    "@tiptap/extension-italic": "^3.0.7",
+    "@tiptap/extension-text-align": "^3.0.7",
+    "@tiptap/extension-underline": "^3.0.7",
+    "@tiptap/react": "^3.0.7",
+    "@tiptap/starter-kit": "^3.0.7",
     "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
