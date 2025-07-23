@@ -8,9 +8,12 @@ export default function AdminLoginPage() {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); 
   const router = useRouter();
   const handleSignIn = async () => {
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
     if (!error) router.push('/admin/dashboard');
     else alert(error.message);
   };
@@ -23,6 +26,18 @@ export default function AdminLoginPage() {
         setEmail={setEmail}
         setPassword={setPassword}
         handleSignIn={handleSignIn}
+        loading={loading} // pass loading ke LoginCard
+      />
+      <img
+        src="/images/bgLogin.png"
+        alt="Background Login"
+        className="w-full object-bottom object-cover absolute left-0 bottom-0 z-0 pointer-events-none select-none"
+        style={{
+          height: 'auto',
+          minHeight: 0,
+          maxHeight: 'none',
+        }}
+        draggable={false}
       />
     </div>
   );

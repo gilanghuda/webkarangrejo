@@ -5,14 +5,22 @@ import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import { uploadImage } from "@/lib/uploadImage";
+import { supabase } from "@/lib/supabaseServer";
+import BeritaDialog from "./BeritaDialog";
 
 export default function BeritaSection() {
+  const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [picture, setPicture] = useState<File | null>(null);
   const [kategori, setKategori] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [beritaList, setBeritaList] = useState<any[]>([]);
+  const [editBerita, setEditBerita] = useState<any | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -37,14 +45,129 @@ export default function BeritaSection() {
     if (e.target.files && e.target.files[0]) setPicture(e.target.files[0]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Fetch berita from Supabase
+  const fetchBerita = async () => {
+    const { data, error } = await supabase
+      .from("berita")
+      .select("*")
+      .order("id", { ascending: false });
+    if (!error && data) setBeritaList(data);
+  };
+
+  useEffect(() => {
+    if (!showDialog) fetchBerita();
+  }, [showDialog]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: handle berita submit logic here
-    setShowDialog(false);
-    setTitle("");
-    setDesc("");
+    if (loading) return;
+    setLoading(true);
+    let imageUrl = "";
+    try {
+      // Upload image via helper
+      if (picture) {
+        imageUrl = await uploadImage(picture, "berita-images");
+      }
+      // Insert berita
+      const { error: insertError } = await supabase
+        .from("berita")
+        .insert([
+          {
+            title,
+            description: desc,
+            image_url: imageUrl,
+            kategori,
+          },
+        ]);
+      if (insertError) throw insertError;
+      // Reset form
+      setShowDialog(false);
+      setTitle("");
+      setDesc("");
+      setPicture(null);
+      setKategori("");
+      if (editor) editor.commands.setContent("");
+      alert("Berita berhasil diupload!");
+      fetchBerita();
+    } catch (err: any) {
+      console.error("Error uploading berita:", err);
+      alert("Gagal upload berita: " + (err?.message || JSON.stringify(err)));
+    }
+    setLoading(false);
+  };
+
+  // Update berita handler
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editBerita) return;
+    setLoading(true);
+    let imageUrl = editBerita.image_url;
+    try {
+      if (picture) {
+        imageUrl = await uploadImage(picture, "berita-images");
+      }
+      // Debug log
+      console.log("Update payload:", {
+        title,
+        description: typeof desc === "string" ? desc : "",
+        image_url: imageUrl,
+        kategori,
+      });
+      const { data, error: updateError } = await supabase
+        .from("berita")
+        .update({
+          title,
+          description: typeof desc === "string" ? desc : "",
+          image_url: imageUrl,
+          kategori,
+        })
+        .eq("id", editBerita.id)
+        .select(); // get updated row for debug
+      console.log("Supabase update response:", { data, updateError });
+      if (updateError) throw updateError;
+      setShowDialog(false);
+      setEditBerita(null);
+      setTitle("");
+      setDesc("");
+      setPicture(null);
+      setKategori("");
+      if (editor) editor.commands.setContent("");
+      alert("Berita berhasil diperbarui!");
+      fetchBerita();
+    } catch (err: any) {
+      console.error("Error updating berita:", err);
+      alert("Gagal perbarui berita: " + (err?.message || JSON.stringify(err)));
+    }
+    setLoading(false);
+  };
+
+  // Delete berita handler
+  const handleDelete = async () => {
+    if (deleteTargetId == null) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("berita").delete().eq("id", deleteTargetId);
+      if (error) throw error;
+      setDeleteDialogOpen(false);
+      setDeleteTargetId(null);
+      alert("Berita berhasil dihapus!");
+      fetchBerita();
+    } catch (err: any) {
+      console.error("Error deleting berita:", err);
+      alert("Gagal menghapus berita: " + (err?.message || JSON.stringify(err)));
+    }
+    setLoading(false);
+  };
+
+  // Open dialog for update
+  const openUpdateDialog = (berita: any) => {
+    setEditBerita(berita);
+    setTitle(berita.title);
+    setDesc(berita.description);
+    setKategori(berita.kategori);
     setPicture(null);
-    setKategori("");
+    setShowDialog(true);
+    if (editor) editor.commands.setContent(berita.description || "");
   };
 
   return (
@@ -55,7 +178,7 @@ export default function BeritaSection() {
           <div className="bg-white rounded-xl shadow px-6 py-5 flex items-center justify-between max-w-xs">
             <span className="font-medium text-black">Tambah Berita</span>
             <button
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-[#6c3ef4] text-white text-2xl shadow"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-[#6c3ef4] text-white text-2xl shadow hover:cursor-pointer"
               onClick={() => setShowDialog(true)}
               aria-label="Tambah Berita"
             >
@@ -63,212 +186,156 @@ export default function BeritaSection() {
             </button>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow px-4 py-6">
-          <h2 className="text-lg font-semibold mb-4">Daftar Berita</h2>
+        <div className="bg-white rounded-xl shadow px-2 sm:px-4 py-4 sm:py-6">
+          <h2 className="text-lg text-black font-semibold mb-4">Daftar Berita</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full text-sm sm:text-base">
               <thead>
                 <tr className="bg-[#f6f7fb]">
-                  <th className="text-[#6c3ef4] font-medium px-3 py-2 text-left">
+                  <th className="text-black font-medium px-3 py-2 text-left">
                     No
                   </th>
-                  <th className="text-[#6c3ef4] font-medium px-3 py-2 text-left">
-                    Judul Berita
+                  <th className="text-black font-medium px-3 py-2 text-left">
+                    Judul
                   </th>
-                  <th className="text-[#6c3ef4] font-medium px-3 py-2 text-left">
+                  <th className="text-black font-medium px-3 py-2 text-left">
+                    Kategori
+                  </th>
+                  <th className="text-black font-medium px-3 py-2 text-left">
+                    Gambar
+                  </th>
+                  <th className="text-black font-medium px-3 py-2 text-left">
                     Deskripsi
                   </th>
-                  <th className="text-[#6c3ef4] font-medium px-3 py-2 text-left">
-                    Kategori
+                  <th className="text-black font-medium px-3 py-2 text-left">
+                    Aksi
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {/* Empty state */}
+                {beritaList.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="text-center py-4 text-black"
+                    >
+                      Belum ada berita.
+                    </td>
+                  </tr>
+                ) : (
+                  beritaList.map((berita, idx) => (
+                    <tr key={berita.id} className="border-b">
+                      <td className="px-3 py-2 text-black">{idx + 1}</td>
+                      <td className="px-3 py-2 text-black">{berita.title}</td>
+                      <td className="px-3 py-2 text-black">{berita.kategori}</td>
+                      <td className="px-3 py-2 text-black">
+                        {berita.image_url ? (
+                          <img
+                            src={berita.image_url}
+                            alt="Berita"
+                            className="max-h-16 rounded"
+                            style={{ maxWidth: "120px", objectFit: "cover" }}
+                          />
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-black">
+                        <div
+                          className="max-w-xs overflow-auto"
+                          dangerouslySetInnerHTML={{ __html: berita.description }}
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-black">
+                        <div className="flex gap-3 items-center">
+                          {/* Edit Icon */}
+                          <button
+                            type="button"
+                            title="Update"
+                            className="p-1 rounded hover:bg-[#f6f7fb] transition hover:cursor-pointer"
+                            onClick={() => openUpdateDialog(berita)}
+                          >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                              <path d="M4 21h4.586a2 2 0 0 0 1.414-.586l9.707-9.707a2 2 0 0 0 0-2.828l-3.172-3.172a2 2 0 0 0-2.828 0L4.586 14.414A2 2 0 0 0 4 15.828V21z" stroke="#F2994A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M14.828 7.172l2 2" stroke="#F2994A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                          {/* Delete Icon */}
+                          <button
+                            type="button"
+                            title="Delete"
+                            className="p-1 rounded hover:bg-[#f6f7fb] transition hover:cursor-pointer"
+                            onClick={() => {
+                              setDeleteTargetId(berita.id);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                              <path d="M3 6h18" stroke="#EB5757" strokeWidth="2" strokeLinecap="round"/>
+                              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="#EB5757" strokeWidth="2" strokeLinecap="round"/>
+                              <rect x="5" y="6" width="14" height="14" rx="2" stroke="#EB5757" strokeWidth="2"/>
+                              <path d="M10 11v6" stroke="#EB5757" strokeWidth="2" strokeLinecap="round"/>
+                              <path d="M14 11v6" stroke="#EB5757" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
       </section>
       {showDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <form
-            className="bg-white rounded-lg shadow-lg p-8 min-w-[600px] w-full max-w-3xl flex flex-col gap-4"
-            onSubmit={handleSubmit}
-          >
-            <h2 className="text-lg font-semibold mb-2 text-black">
-              Tambah Berita
-            </h2>
-            <div
-              className="flex flex-col md:flex-row gap-6"
-              style={{ minHeight: 350 }}
-            >
-              <div
-                className="flex flex-col gap-4 min-w-[200px]"
-                style={{ flex: 1 }}
-              >
-                <div>
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Judul Berita
-                  </label>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3 py-2 rounded-md border text-base text-black outline-none focus:border-[#6c3ef4] transition"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Kategori
-                  </label>
-                  <select
-                    value={kategori}
-                    onChange={(e) => setKategori(e.target.value)}
-                    className="w-full px-3 py-2 rounded-md border text-base text-black outline-none focus:border-[#6c3ef4] transition"
-                    required
-                  >
-                    <option value="Umum">Umum</option>
-                    <option value="Pemerintahan">Pemerintahan</option>
-                    <option value="Kegiatan">Kegiatan</option>
-                    <option value="Pengumuman">Pengumuman</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <label className="block text-sm font-medium text-black mb-1">
-                    Gambar
-                  </label>
-                  <button
-                    type="button"
-                    className="px-2 py-1 bg-[#6c3ef4] text-white rounded hover:bg-[#5a2edc] text-sm"
-                    onClick={() =>
-                      document.getElementById("upload-gambar")?.click()
-                    }
-                  >
-                    Upload Gambar
-                  </button>
-                  <input
-                    id="upload-gambar"
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePictureChange}
-                    className="hidden"
-                  />
-                  {picture && (
-                    <img
-                      src={URL.createObjectURL(picture)}
-                      alt="Preview"
-                      className="mt-2 rounded max-h-32"
-                    />
-                  )}
-                </div>
-              </div>
-              <div
-                className="min-w-[200px] flex flex-col"
-                style={{ flex: 5, minWidth: 0 }}
-              >
-                <label className="block text-sm font-medium text-black mb-1">
-                  Deskripsi
-                </label>
-                <div
-                className="border rounded-md bg-white cursor-text text-black px-3 py-2 outline-none focus-within:border-[#6c3ef4] transition"
-                style={{ minHeight: 350, position: 'relative' }}
-                onClick={() => editor?.chain().focus().run()}
-                >
-                  <div className="flex gap-3 pb-2 border-b mb-2">
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().toggleBold().run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive('bold') ? 'font-bold bg-gray-200' : ''}`}
-                      aria-label="Bold"
-                    >
-                      B
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().toggleItalic().run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive('italic') ? 'italic bg-gray-200' : ''}`}
-                      aria-label="Italic"
-                    >
-                      I
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().toggleUnderline().run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive('underline') ? 'underline bg-gray-200' : ''}`}
-                      aria-label="Underline"
-                    >
-                      U
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().setTextAlign('left').run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive({ textAlign: 'left' }) ? 'font-bold bg-gray-200' : ''}`}
-                      aria-label="Align Left"
-                    >
-                      <span style={{ fontWeight: "bold" }}>L</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().setTextAlign('center').run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive({ textAlign: 'center' }) ? 'font-bold bg-gray-200' : ''}`}
-                      aria-label="Align Center"
-                    >
-                      <span style={{ fontWeight: "bold" }}>C</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editor?.chain().focus().setTextAlign('right').run()}
-                      className={`w-8 h-8 flex items-center justify-center border rounded-md text-black bg-white transition hover:bg-gray-100 hover:scale-105 active:bg-gray-200 ${editor?.isActive({ textAlign: 'right' }) ? 'font-bold bg-gray-200' : ''}`}
-                      aria-label="Align Right"
-                    >
-                      <span style={{ fontWeight: "bold" }}>R</span>
-                    </button>
-                  </div>
-                  {isClient && (
-                    <div className="w-full h-[300px] text-black outline-none overflow-y-auto" style={{ color: '#222', minHeight: 220 }}>
-                      <EditorContent
-                        editor={editor}
-                        className="w-full h-full"
-                        style={{ minHeight: 220 }}
-                      />
-                    </div>
-                  )}
-                  <style>{`
-                    .ProseMirror {
-                      color: #222 !important;
-                      outline: none !important;
-                      background: transparent;
-                    }
-                    .ProseMirror:focus {
-                      outline: none !important;
-                    }
-                    .ProseMirror strong,
-                    .ProseMirror em,
-                    .ProseMirror u {
-                      color: #222 !important;
-                    }
-                  `}</style>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 mt-2">
+        <BeritaDialog
+          showDialog={showDialog}
+          setShowDialog={(v: boolean) => {
+            setShowDialog(v);
+            if (!v) setEditBerita(null);
+          }}
+          title={title}
+          setTitle={setTitle}
+          desc={desc}
+          setDesc={setDesc}
+          picture={picture}
+          setPicture={setPicture}
+          kategori={kategori}
+          setKategori={setKategori}
+          loading={loading}
+          handleSubmit={editBerita ? handleUpdate : handleSubmit}
+          editor={editor}
+          isClient={isClient}
+          editBerita={editBerita}
+        />
+      )}
+      {/* Delete Confirmation Dialog */}
+      {deleteDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-2">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-2 text-black">Konfirmasi Hapus</h3>
+            <p className="mb-4 text-black">Yakin ingin menghapus berita ini?</p>
+            <div className="flex justify-end gap-2 flex-wrap">
               <button
-                type="button"
-                className="px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
-                onClick={() => setShowDialog(false)}
+                className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+                onClick={() => {
+                  setDeleteDialogOpen(false);
+                  setDeleteTargetId(null);
+                }}
+                disabled={loading}
               >
                 Batal
               </button>
               <button
-                type="submit"
-                className="px-4 py-2 bg-[#6c3ef4] text-white rounded hover:bg-[#5a2edc]"
+                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+                onClick={handleDelete}
+                disabled={loading}
               >
-                Simpan
+                {loading ? "Menghapus..." : "Hapus"}
               </button>
             </div>
-          </form>
+          </div>
         </div>
       )}
     </>
