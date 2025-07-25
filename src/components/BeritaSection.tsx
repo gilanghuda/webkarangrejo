@@ -50,7 +50,7 @@ export default function BeritaSection() {
     const { data, error } = await supabase
       .from("berita")
       .select("*")
-      .order("id", { ascending: false });
+      .order("created_at", { ascending: false }); 
     if (!error && data) setBeritaList(data);
   };
 

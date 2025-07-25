@@ -4,14 +4,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabaseClient";
 
 interface NewsItem {
   id: string;
   title: string;
   description: string;
-  category: string;
-  imgurl: string;
-  date: string;
+  kategori: string;
+  image_url: string;
+  created_at: string;
 }
 
 const NewsDetail: React.FC = () => {
@@ -33,22 +34,17 @@ const NewsDetail: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetch("/news.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch news data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const item = data.find((item: NewsItem) => item.id === id);
-        setNewsItem(item || null);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching news data:", error);
-        setLoading(false);
-      });
+    const fetchBerita = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("berita")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (!error && data) setNewsItem(data);
+      setLoading(false);
+    };
+    if (id) fetchBerita();
   }, [id]);
 
   if (loading) {
@@ -97,7 +93,7 @@ const NewsDetail: React.FC = () => {
       <div className="w-full h-[478px] overflow-hidden relative">
         <div ref={parallaxRef} className="parallax absolute top-0 left-0 w-full h-full will-change-transform">
           <Image
-            src={newsItem.imgurl}
+            src={newsItem.image_url}
             alt={`${newsItem.title} main view`}
             width={1200}
             height={478}
@@ -112,14 +108,19 @@ const NewsDetail: React.FC = () => {
         <div className="grid grid-cols-1 gap-12">
           <div className="bg-white rounded-xl p-5">
             <h1 className="text-3xl font-bold mb-4 font-sans text-black">{newsItem.title}</h1>
-            <h2 className="text-xl mb-6 font-sans text-gray-700" style={{ fontWeight: 400 }}>
-              {new Date(newsItem.date).toLocaleDateString("id-ID")}
+            <h2 className="text-xl mb-2 font-sans text-gray-700" style={{ fontWeight: 400 }}>
+              {newsItem.kategori}
             </h2>
-            <div className="prose prose-sm text-black space-y-4 text-justify" style={{ fontSize: "0.875rem" }}>
-              {paragraphs.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
+            <h3 className="text-md mb-6 font-sans text-gray-500" style={{ fontWeight: 400 }}>
+              {newsItem.created_at && !isNaN(new Date(newsItem.created_at).getTime())
+                ? new Date(newsItem.created_at).toLocaleDateString("id-ID")
+                : "-"}
+            </h3>
+            <div
+              className="prose prose-sm text-black space-y-4 text-justify"
+              style={{ fontSize: "0.875rem" }}
+              dangerouslySetInnerHTML={{ __html: newsItem.description }}
+            />
           </div>
         </div>
       </div>
