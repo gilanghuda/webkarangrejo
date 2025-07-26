@@ -21,8 +21,14 @@ export default function Home() {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newsData, setNewsData] = useState<any[]>([]);
+  const [population, setPopulation] = useState(0);
+  const [families, setFamilies] = useState(0);
+  const [males, setMales] = useState(0);
+  const [females, setFemales] = useState(0);
   const parallaxRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const adminSectionRef = useRef<HTMLDivElement>(null);
 
+  // Parallax effect
   useEffect(() => {
     const handleScroll = () => {
       parallaxRefs.current.forEach((ref) => {
@@ -37,6 +43,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Image carousel and news fetch
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -54,6 +61,48 @@ export default function Home() {
       .catch((error) => console.error("Error fetching news data:", error));
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Count-up animation
+  useEffect(() => {
+    const countUp = (
+      setValue: React.Dispatch<React.SetStateAction<number>>,
+      target: number,
+      duration: number
+    ) => {
+      const increment = target / (duration / 16); // 60fps
+      let current = 0;
+
+      const update = () => {
+        current += increment;
+        if (current < target) {
+          setValue(Math.round(current));
+          requestAnimationFrame(update);
+        } else {
+          setValue(target);
+        }
+      };
+      update();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          countUp(setPopulation, 10488, 2000); // 2 seconds
+          countUp(setFamilies, 2500, 2000);
+          countUp(setMales, 5244, 2000);
+          countUp(setFemales, 5244, 2000);
+          observer.disconnect(); // Run animation only once
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (adminSectionRef.current) {
+      observer.observe(adminSectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -207,7 +256,7 @@ export default function Home() {
           </div>
 
           {/* Administrasi Penduduk */}
-          <div className="mb-16">
+          <div className="mb-16" ref={adminSectionRef}>
             <h3 className="text-4xl font-bold font-sans text-black text-center md:text-left">
               Administrasi Penduduk
             </h3>
@@ -223,9 +272,12 @@ export default function Home() {
                       Jumlah Penduduk
                     </p>
                   </div>
-                  <div className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center">
+                  <div
+                    className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center"
+                    aria-live="polite"
+                  >
                     <p className="text-white font-sans text-lg font-bold text-center">
-                      10,488
+                      {population.toLocaleString("id-ID")}
                     </p>
                   </div>
                 </div>
@@ -235,9 +287,12 @@ export default function Home() {
                       Kepala Keluarga
                     </p>
                   </div>
-                  <div className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center">
+                  <div
+                    className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center"
+                    aria-live="polite"
+                  >
                     <p className="text-white font-sans text-lg font-bold text-center">
-                      2,500
+                      {families.toLocaleString("id-ID")}
                     </p>
                   </div>
                 </div>
@@ -249,9 +304,12 @@ export default function Home() {
                       Laki-laki
                     </p>
                   </div>
-                  <div className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center">
+                  <div
+                    className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center"
+                    aria-live="polite"
+                  >
                     <p className="text-white font-sans text-lg font-bold text-center">
-                      5,244
+                      {males.toLocaleString("id-ID")}
                     </p>
                   </div>
                 </div>
@@ -261,9 +319,12 @@ export default function Home() {
                       Perempuan
                     </p>
                   </div>
-                  <div className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center">
+                  <div
+                    className="bg-[#4E6922] rounded-lg shadow-md p-3 flex items-center justify-center"
+                    aria-live="polite"
+                  >
                     <p className="text-white font-sans text-lg font-bold text-center">
-                      5,244
+                      {females.toLocaleString("id-ID")}
                     </p>
                   </div>
                 </div>
