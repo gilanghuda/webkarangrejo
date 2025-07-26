@@ -1,0 +1,57 @@
+[
+  {
+    "id": "gunung-kelud",
+    "name": "Gunung Kelud",
+    "name2": "Via Karangrejo",
+    "description": "Gunung Kelud adalah salah satu destinasi wisata unggulan yang terletak di Kabupaten Blitar, Jawa Timur, dikenal sebagai gunung berapi aktif dengan sejarah letusan yang signifikan. Pesona alamnya menarik para pencinta petualangan untuk menikmati keindahan kawah, udara sejuk, dan panorama pegunungan yang memukau.\n\nSelain keindahan alam, kawasan Gunung Kelud menyimpan potensi edukasi geologi dan sejarah yang memperkaya pengalaman wisatawan. Letusan besar pada tahun 2014 menjadi bagian dari cerita yang membentuk karakter unik kawasan ini.\n\nMasyarakat Blitar menjaga hubungan harmonis dengan alam, mengembangkan Gunung Kelud sebagai destinasi wisata yang aman dan nyaman dengan akses jalan yang memadai. Wisatawan dapat menjelajahi terowongan bekas aliran lahar dan menikmati sunrise dari gardu pandang.\n\nJalur pendakian Karangrejo menawarkan pengalaman mendaki yang cocok untuk pemula maupun wisatawan berpengalaman. Aktivitas seperti camping dan fotografi alam juga menjadi daya tarik utama bagi pengunjung.",
+    "detail": {
+      "overview": "Pendakian Gunung Kelud memiliki beberapa jalur yang dapat dipilih sesuai preferensi dan tingkat kemampuan pendaki. Jalur Karangrejo di Desa Karangrejo, Kecamatan Gurum, Kabupaten Blitar, menjadi pilihan populer karena rute yang tidak terlalu ekstrem dan pemandangan alam yang menakjubkan.",
+      "experience": "Sepanjang jalur Karangrejo, pendaki akan disuguhkan pemandangan hutan tropis, berbagai jenis tumbuhan endemik, dan kawasan Puncak Batuk yang menawan. Dengan durasi pendakian sekitar 4 hingga 5 jam dari pusat kota Blitar, jalur ini ideal untuk pendaki pemula yang ingin menikmati petualangan singkat tanpa bermalam."
+    },
+    "details": {
+      "location": "Desa Karangrejo, Kec. Gurum, Kab. Blitar",
+      "duration": {
+        "ascent": "3-6 jam",
+        "descent": "1-2 jam"
+      },
+      "ticketPrice": "Rp10.000/orang",
+      "campingArea": "Terbatas, namun terdapat beberapa titik datar untuk mendirikan tenda",
+      "guide": "Rp150.000/orang",
+      "route": "Tanah liat, makaddam, bebatuan, tanggul besi, dan tali bantu",
+      "waterSource": "Tidak tersedia di sepanjang jalur (disarankan membawa bekal sendiri)"
+    },
+    "images": [
+      "/images/kelud.jpg",
+      "/images/kelud1.jpg",
+      "/images/kelud2.jpg",
+      "/images/kelud3.jpg",
+      "/images/kelud4.jpg"
+    ]
+  },
+  {
+    "id": "sumber-bon-c",
+    "name": "Sumber Bon C",
+    "name2": "Wisata Keluarga",
+    "description": "Sumber Bon C adalah destinasi wisata alam di Desa Karangrejo, Kabupaten Blitar, yang terkenal sebagai tempat ideal untuk rekreasi keluarga dan healing di tengah suasana pedesaan yang asri. Lokasinya yang dikelilingi pepohonan rindang dan aliran air jernih menawarkan ketenangan bagi pengunjung yang ingin melepas penat.\n\nArea wisata ini memiliki fasilitas camping ground yang ramah keluarga, lengkap dengan area bermain anak dan spot foto yang menarik. Pengunjung dapat menikmati kegiatan seperti berenang di kolam alami atau piknik di tepi sungai.\n\nSumber Bon C juga menjadi tempat favorit untuk kegiatan komunitas, seperti gathering perusahaan atau acara keluarga, karena aksesnya yang mudah dari pusat desa. Pengelola wisata setempat memastikan kebersihan dan keamanan area untuk kenyamanan wisatawan.\n\nSelain keindahan alam, Sumber Bon C menawarkan pengalaman budaya lokal melalui kuliner khas desa yang tersedia di warung-warung sekitar. Wisata ini cocok untuk semua usia, menjadikannya pilihan ideal untuk libur akhir pekan.",
+    "detail": {
+      "overview": "Sumber Bon C merupakan destinasi wisata alam yang menawarkan pengalaman rekreasi santai di Desa Karangrejo, dengan fasilitas yang mendukung aktivitas keluarga dan komunitas. Lokasinya yang strategis membuatnya mudah dijangkau dari berbagai wilayah di Kabupaten Blitar.",
+      "experience": "Pengunjung dapat menikmati suasana alami dengan berjalan-jalan di sekitar area wisata, bermain air di kolam alami, atau berkemah di camping ground yang telah disediakan. Aktivitas seperti fotografi dan piknik di tepi sungai menambah daya tarik wisata ini untuk semua kalangan."
+    },
+    "details": {
+      "location": "Desa Karangrejo, Kec. Garum, Kab. Blitar",
+      "operationalHours": "07.00 - 17.00 (Setiap Hari)",
+      "ticketPrice": "Rp3.000/orang",
+      "parking": "Motor Rp2.000 | Mobil Rp5.000",
+      "facilities": "Warung, toilet, musala, spot duduk santai, kolam ikan, dan area camping",
+      "photoSpots": "Gapura Bon C, area sekitar kolam yang rindang, Jembatan Kecil & Bebatuan Sekitar Kolam",
+      "favoriteActivities": "Memberi makan ikan koi, bersantai di tepi kolam, camping"
+    },
+    "images": [
+      "/images/bon-c.jpg",
+      "/images/bon-c1.jpg",
+      "/images/bon-c2.jpg",
+      "/images/bon-c3.jpg",
+      "/images/bon-c4.jpg"
+    ]
+  }
+]
