@@ -326,7 +326,7 @@ export default function Home() {
                     </p>
                   </div>
                   <Link href="/detail-wisata/sumber-bon-c">
-                    <button className="bg-[#F2AF4B] text-white px-3 py-1 rounded-[20px] hover:bg-[#e09a3c] transition-colors duration-300 font-sans text-sm">
+                    <button className="bg-[#F2AF4B] text-white px-3 py-1 rounded-[20px] hover:bg-[#e09a3c] transition-colors duration-300 font-sans text-sm cursor-pointer">
                       Lihat Detail
                     </button>
                   </Link>
@@ -361,7 +361,7 @@ export default function Home() {
                     </p>
                   </div>
                   <Link href="/detail-wisata/gunung-kelud">
-                    <button className="bg-[#F2AF4B] text-white px-3 py-1 rounded-[20px] hover:bg-[#e09a3c] transition-colors duration-300 font-sans text-sm">
+                    <button className="bg-[#F2AF4B] text-white px-3 py-1 rounded-[20px] hover:bg-[#e09a3c] transition-colors duration-300 font-sans text-sm cursor-pointer">
                       Lihat Detail
                     </button>
                   </Link>
@@ -432,7 +432,7 @@ export default function Home() {
                           <Link href={`/berita/${news.id}`}>
                             <button
                               className="bg-[#F2AF4B] text-white px-3 py-1 rounded-[20px] hover:bg-[#e09a3c] 
-                                      transition-colors duration-300 font-sans text-xs whitespace-nowrap w-full md:w-auto"
+                                      transition-colors duration-300 font-sans text-xs whitespace-nowrap w-full md:w-auto cursor-pointer"
                             >
                               Baca Berita
                             </button>
