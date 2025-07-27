@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function LoginCard({
   email,
@@ -23,9 +24,11 @@ export default function LoginCard({
         <div className="flex items-center gap-2 mb-2">
           {/* Logo */}
           <div className="w-7 h-7 rounded-md flex items-center justify-center bg-white">
-            <img
+            <Image
               src="/logo-desa.png"
               alt="Logo Desa Karangrejo"
+              width={28}
+              height={28}
               className="object-contain w-7 h-7"
               draggable={false}
             />

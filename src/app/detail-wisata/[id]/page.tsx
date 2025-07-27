@@ -38,7 +38,6 @@ const TourismDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [galleryImageIndex, setGalleryImageIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
   const parallaxRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -79,11 +78,7 @@ const TourismDetail: React.FC = () => {
     if (!tourismData || tourismData.images.length <= 1) return;
 
     const interval = setInterval(() => {
-      setIsFading(true);
-      setTimeout(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % tourismData.images.length);
-        setIsFading(false);
-      }, 1000); // Match transition duration
+      setCurrentImageIndex((prev) => (prev + 1) % tourismData.images.length);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -91,11 +86,7 @@ const TourismDetail: React.FC = () => {
 
   const handleImageClick = (index: number) => {
     if (index === currentImageIndex) return;
-    setIsFading(true);
-    setTimeout(() => {
-      setCurrentImageIndex(index);
-      setIsFading(false);
-    }, 1000); // Match transition duration
+    setCurrentImageIndex(index);
   };
 
   const nextGalleryImage = () => {

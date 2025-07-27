@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from "@/lib/supabaseClient"; 
 import LoginCard from "@/components/loginCard";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   
@@ -28,9 +29,10 @@ export default function AdminLoginPage() {
         handleSignIn={handleSignIn}
         loading={loading} // pass loading ke LoginCard
       />
-      <img
+      <Image
         src="/images/bgLogin.png"
         alt="Background Login"
+        fill
         className="w-full object-bottom object-cover absolute left-0 bottom-0 z-0 pointer-events-none select-none"
         style={{
           height: 'auto',

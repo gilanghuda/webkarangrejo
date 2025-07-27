@@ -1,13 +1,25 @@
 import React from "react";
 import { EditorContent } from "@tiptap/react";
+import Image from "next/image";
 
-export default function BeritaDialog({
-  showDialog,
-  setShowDialog,
+export interface BeritaDialogProps {
+  title: string;
+  setTitle: (v: string) => void;
+  picture: File | null;
+  setPicture: (v: File | null) => void;
+  kategori: string;
+  setKategori: (v: string) => void;
+  loading: boolean;
+  handleSubmit: (e: React.FormEvent) => void;
+  editor: any;
+  isClient: boolean;
+  editBerita: any;
+  setShowDialog: (v: boolean) => void;
+}
+
+const BeritaDialog: React.FC<BeritaDialogProps> = ({
   title,
   setTitle,
-  desc,
-  setDesc,
   picture,
   setPicture,
   kategori,
@@ -17,7 +29,8 @@ export default function BeritaDialog({
   editor,
   isClient,
   editBerita,
-}: any) {
+  setShowDialog,
+}) => {
   const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) setPicture(e.target.files[0]);
   };
@@ -90,10 +103,12 @@ export default function BeritaDialog({
                 className="hidden"
               />
               {picture && (
-                <img
+                <Image
                   src={URL.createObjectURL(picture)}
                   alt="Preview"
-                  className="mt-2 rounded max-h-32"
+                  width={120}
+                  height={120}
+                  className="mt-2 rounded max-h-32 object-cover"
                 />
               )}
             </div>
@@ -243,3 +258,5 @@ export default function BeritaDialog({
     </div>
   );
 }
+
+export default BeritaDialog;

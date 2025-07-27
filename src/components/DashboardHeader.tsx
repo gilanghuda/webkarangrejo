@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function DashboardHeader({
   user,
   handleSignOut,
 }: {
-  user: any;
+  user: { email?: string };
   handleSignOut: () => void;
 }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -21,13 +22,15 @@ export default function DashboardHeader({
       <header className="w-full bg-white flex items-center justify-between px-4 sm:px-8 py-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-md flex items-center justify-center bg-white">
-          <img
-            src="/logo-desa.png"
-            alt="Logo Desa Karangrejo"
-            className="object-contain w-7 h-7"
-            draggable={false}
-          />
-        </div>
+            <Image
+              src="/logo-desa.png"
+              alt="Logo Desa Karangrejo"
+              width={28}
+              height={28}
+              className="object-contain w-7 h-7"
+              draggable={false}
+            />
+          </div>
           <span className="font-bold text-lg text-black">
             Admin Desa Karangrejo
           </span>

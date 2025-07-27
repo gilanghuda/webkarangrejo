@@ -12,6 +12,16 @@ const LeafletMap = dynamic(() => import("./LeafletMap"), {
   ssr: false,
 });
 
+type Berita = {
+  id: number;
+  title: string;
+  description: string;
+  kategori: string;
+  image_url: string;
+  created_at: string;
+  [key: string]: any;
+};
+
 export default function Home() {
   const images = [
     "/images/home1.png",
@@ -21,7 +31,7 @@ export default function Home() {
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [newsData, setNewsData] = useState<any[]>([]);
+  const [newsData, setNewsData] = useState<Berita[]>([]);
   const [population, setPopulation] = useState(0);
   const [families, setFamilies] = useState(0);
   const [males, setMales] = useState(0);
@@ -55,16 +65,17 @@ export default function Home() {
       const { data, error } = await supabase
         .from("berita")
         .select("*")
-        .order("created_at", { ascending: false }) 
+        .order("created_at", { ascending: false })
         .limit(5);
       if (!error && data) {
         console.log("Berita fetched:", data);
         // Bersihkan kategori dari tag HTML dan pastikan image_url dipakai
         const cleanData = data.map((item: any) => ({
           ...item,
-          kategori: typeof item.kategori === "string"
-            ? item.kategori.replace(/<[^>]+>/g, "") // hapus tag html
-            : item.kategori,
+          kategori:
+            typeof item.kategori === "string"
+              ? item.kategori.replace(/<[^>]+>/g, "") // hapus tag html
+              : item.kategori,
           imgurl: item.image_url || "", // gunakan image_url dari database
         }));
         setNewsData(cleanData);
@@ -74,7 +85,7 @@ export default function Home() {
     fetchBerita();
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   // Count-up animation
   useEffect(() => {

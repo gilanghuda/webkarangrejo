@@ -2,7 +2,7 @@ import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
 import BeritaSection from "./BeritaSection";
 
-export default function DashboardLayout({ user, handleSignOut }: { user: any, handleSignOut: () => void }) {
+export default function DashboardLayout({ user, handleSignOut }: { user: { email?: string }, handleSignOut: () => void }) {
   return (
     <div className="min-h-screen bg-[#f6f7fb] flex flex-col">
       <DashboardHeader user={user} handleSignOut={handleSignOut} />

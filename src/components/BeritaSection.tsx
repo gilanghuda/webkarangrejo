@@ -290,15 +290,12 @@ export default function BeritaSection() {
       </section>
       {showDialog && (
         <BeritaDialog
-          showDialog={showDialog}
           setShowDialog={(v: boolean) => {
             setShowDialog(v);
             if (!v) setEditBerita(null);
           }}
           title={title}
           setTitle={setTitle}
-          desc={desc}
-          setDesc={setDesc}
           picture={picture}
           setPicture={setPicture}
           kategori={kategori}

@@ -124,9 +124,6 @@ const NewsDetail: React.FC = () => {
     return <div className="min-h-screen bg-white text-center py-16">News not found</div>;
   }
 
-  // Split description into paragraphs
-  const paragraphs = newsItem.description.split("\n\n");
-
   return (
     <div className="min-h-screen bg-white relative">
       {/* Share Options Modal with Backdrop Blur */}
