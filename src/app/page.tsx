@@ -19,7 +19,7 @@ type Berita = {
   kategori: string;
   image_url: string;
   created_at: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export default function Home() {
@@ -68,15 +68,14 @@ export default function Home() {
         .order("created_at", { ascending: false })
         .limit(5);
       if (!error && data) {
-        console.log("Berita fetched:", data);
         // Bersihkan kategori dari tag HTML dan pastikan image_url dipakai
-        const cleanData = data.map((item: any) => ({
+        const cleanData: Berita[] = data.map((item: Berita) => ({
           ...item,
           kategori:
             typeof item.kategori === "string"
-              ? item.kategori.replace(/<[^>]+>/g, "") // hapus tag html
+              ? item.kategori.replace(/<[^>]+>/g, "")
               : item.kategori,
-          imgurl: item.image_url || "", // gunakan image_url dari database
+          imgurl: (item as any).image_url || "",
         }));
         setNewsData(cleanData);
       }
@@ -480,9 +479,9 @@ export default function Home() {
                     >
                       {/* Image Container */}
                       <div className="w-full md:w-32 h-40 md:h-full relative flex-shrink-0">
-                        {news.imgurl ? (
+                        {typeof news.imgurl === "string" && news.imgurl.length > 0 ? (
                           <Image
-                            src={news.imgurl}
+                            src={news.imgurl as string}
                             alt={news.title}
                             fill
                             className="object-cover rounded-lg"

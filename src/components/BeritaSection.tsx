@@ -9,6 +9,16 @@ import { uploadImage } from "@/lib/uploadImage";
 import { supabase } from "@/lib/supabaseServer";
 import BeritaDialog from "./BeritaDialog";
 
+type Berita = {
+  id: number;
+  title: string;
+  description: string;
+  kategori: string;
+  image_url: string;
+  created_at: string;
+  [key: string]: unknown;
+};
+
 export default function BeritaSection() {
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -17,8 +27,8 @@ export default function BeritaSection() {
   const [picture, setPicture] = useState<File | null>(null);
   const [kategori, setKategori] = useState("");
   const [isClient, setIsClient] = useState(false);
-  const [beritaList, setBeritaList] = useState<any[]>([]);
-  const [editBerita, setEditBerita] = useState<any | null>(null);
+  const [beritaList, setBeritaList] = useState<Berita[]>([]);
+  const [editBerita, setEditBerita] = useState<Berita | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
@@ -50,8 +60,8 @@ export default function BeritaSection() {
     const { data, error } = await supabase
       .from("berita")
       .select("*")
-      .order("created_at", { ascending: false }); 
-    if (!error && data) setBeritaList(data);
+      .order("created_at", { ascending: false });
+    if (!error && data) setBeritaList(data as Berita[]);
   };
 
   useEffect(() => {
@@ -160,11 +170,11 @@ export default function BeritaSection() {
   };
 
   // Open dialog for update
-  const openUpdateDialog = (berita: any) => {
+  const openUpdateDialog = (berita: Berita) => {
     setEditBerita(berita);
     setTitle(berita.title);
     setDesc(berita.description);
-    setKategori(berita.kategori);
+    setKategori(berita.kategori as string);
     setPicture(null);
     setShowDialog(true);
     if (editor) editor.commands.setContent(berita.description || "");

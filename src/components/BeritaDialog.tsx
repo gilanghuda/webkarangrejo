@@ -1,5 +1,5 @@
 import React from "react";
-import { EditorContent } from "@tiptap/react";
+import { EditorContent, Editor } from "@tiptap/react";
 import Image from "next/image";
 
 export interface BeritaDialogProps {
@@ -11,9 +11,9 @@ export interface BeritaDialogProps {
   setKategori: (v: string) => void;
   loading: boolean;
   handleSubmit: (e: React.FormEvent) => void;
-  editor: any;
+  editor: Editor | null;
   isClient: boolean;
-  editBerita: any;
+  editBerita: Record<string, unknown> | null;
   setShowDialog: (v: boolean) => void;
 }
 
