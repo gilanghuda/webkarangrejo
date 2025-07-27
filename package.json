@@ -11,8 +11,8 @@
   "dependencies": {
     "@mantine/core": "^5.10.5",
     "@mantine/hooks": "^5.10.5",
-    "@mantine/rte": "^5.10.5",
-    "@supabase/supabase-js": "^2.52.0",
+    "@mantine/rte": "^3.4.3",
+    "@supabase/supabase-js": "^2.52.1",
     "@tiptap/extension-bold": "^3.0.7",
     "@tiptap/extension-italic": "^3.0.7",
     "@tiptap/extension-text-align": "^3.0.7",

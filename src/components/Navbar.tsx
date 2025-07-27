@@ -56,7 +56,7 @@ const Navbar = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-white text-xl font-bold transition-colors duration-300 px-4 py-2 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 font-sans"
+                  className="text-white text-xl font-bold transition-colors duration-300 px-4 py-2 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 font-sans cursor-pointer"
                 >
                   {item.label}
                 </button>
@@ -69,7 +69,7 @@ const Navbar = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-white text-base font-bold transition-colors duration-300 px-3 py-1 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 font-sans"
+                  className="text-white text-base font-bold transition-colors duration-300 px-3 py-1 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 font-sans cursor-pointer"
                 >
                   {item.label}
                 </button>
@@ -80,7 +80,7 @@ const Navbar = () => {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white text-2xl font-sans p-2"
+                className="text-white text-2xl font-sans p-2 cursor-pointer"
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               >
                 {isMenuOpen ? "✕" : "☰"}
@@ -104,7 +104,7 @@ const Navbar = () => {
             {/* Close Button (Top Right) */}
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="absolute top-8 right-6 text-white text-3xl p-2"
+              className="absolute top-8 right-6 text-white text-3xl p-2 cursor-pointer"
               aria-label="Close menu"
             >
               ✕
@@ -116,7 +116,7 @@ const Navbar = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="w-full text-white text-2xl font-bold py-4 px-6 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 text-center font-sans transition-all duration-200"
+                  className="w-full text-white text-2xl font-bold py-4 px-6 rounded-md hover:bg-[#2a3815] hover:bg-opacity-70 text-center font-sans transition-all duration-200 cursor-pointer"
                 >
                   {item.label}
                 </button>
