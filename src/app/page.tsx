@@ -495,7 +495,7 @@ export default function Home() {
                       {/* Content */}
                       <div className="flex-1 flex flex-col justify-between overflow-hidden">
                         <div className="space-y-2">
-                          <h3 className="text-lg font-semibold font-sans line-clamp-2">
+                          <h3 className="text-lg font-semibold font-sans text-black line-clamp-2">
                             {news.title}
                           </h3>
                           <div
