@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor } from "@tiptap/react"; // Hapus EditorContent import
 import StarterKit from "@tiptap/starter-kit";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
@@ -8,6 +8,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { uploadImage } from "@/lib/uploadImage";
 import { supabase } from "@/lib/supabaseServer";
 import BeritaDialog from "./BeritaDialog";
+import Image from "next/image"; // Untuk ganti <img> dengan <Image>
 
 type Berita = {
   id: number;
@@ -50,10 +51,6 @@ export default function BeritaSection() {
     },
     immediatelyRender: false,
   });
-
-  const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) setPicture(e.target.files[0]);
-  };
 
   // Fetch berita from Supabase
   const fetchBerita = async () => {
@@ -240,11 +237,12 @@ export default function BeritaSection() {
                       <td className="px-3 py-2 text-black">{berita.kategori}</td>
                       <td className="px-3 py-2 text-black">
                         {berita.image_url ? (
-                          <img
-                            src={berita.image_url}
+                          <Image
+                            src={berita.image_url as string}
                             alt="Berita"
-                            className="max-h-16 rounded"
-                            style={{ maxWidth: "120px", objectFit: "cover" }}
+                            width={120}
+                            height={64}
+                            className="max-h-16 rounded object-cover"
                           />
                         ) : (
                           <span className="text-gray-400">-</span>

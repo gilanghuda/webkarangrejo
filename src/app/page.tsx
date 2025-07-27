@@ -69,13 +69,13 @@ export default function Home() {
         .limit(5);
       if (!error && data) {
         // Bersihkan kategori dari tag HTML dan pastikan image_url dipakai
-        const cleanData: Berita[] = data.map((item: Berita) => ({
+        const cleanData: Berita[] = (data as Berita[]).map((item) => ({
           ...item,
           kategori:
             typeof item.kategori === "string"
               ? item.kategori.replace(/<[^>]+>/g, "")
               : item.kategori,
-          imgurl: (item as any).image_url || "",
+          imgurl: item.image_url || "",
         }));
         setNewsData(cleanData);
       }
