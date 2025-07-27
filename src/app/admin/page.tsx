@@ -32,13 +32,9 @@ export default function AdminLoginPage() {
       <Image
         src="/images/bgLogin.png"
         alt="Background Login"
-        fill
+        width={1920}
+        height={600}
         className="w-full object-bottom object-cover absolute left-0 bottom-0 z-0 pointer-events-none select-none"
-        style={{
-          height: 'auto',
-          minHeight: 0,
-          maxHeight: 'none',
-        }}
         draggable={false}
       />
     </div>
