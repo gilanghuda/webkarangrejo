@@ -5,14 +5,15 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Share2, X, Copy, MessageCircle } from "lucide-react";
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabaseClient";
 
 interface NewsItem {
   id: string;
   title: string;
   description: string;
-  category: string;
-  imgurl: string;
-  date: string;
+  kategori: string;
+  image_url: string;
+  created_at: string;
 }
 
 const NewsDetail: React.FC = () => {
@@ -43,22 +44,17 @@ const NewsDetail: React.FC = () => {
 
   // Fetch news data
   useEffect(() => {
-    fetch("/news.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch news data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const item = data.find((item: NewsItem) => item.id === id);
-        setNewsItem(item || null);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching news data:", error);
-        setLoading(false);
-      });
+    const fetchBerita = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("berita")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (!error && data) setNewsItem(data);
+      setLoading(false);
+    };
+    if (id) fetchBerita();
   }, [id]);
 
   // Handle focus for copy functionality
@@ -225,7 +221,7 @@ const NewsDetail: React.FC = () => {
       <div className="w-full h-[478px] overflow-hidden relative">
         <div ref={parallaxRef} className="parallax absolute top-0 left-0 w-full h-full will-change-transform">
           <Image
-            src={newsItem.imgurl}
+            src={newsItem.image_url}
             alt={`${newsItem.title} main view`}
             width={1200}
             height={478}
@@ -240,26 +236,20 @@ const NewsDetail: React.FC = () => {
         <div className="grid grid-cols-1 gap-12">
           <div className="bg-white rounded-xl p-5">
             <h1 className="text-3xl font-bold mb-4 font-sans text-black">{newsItem.title}</h1>
-            <div className="flex items-center mb-6">
-              <span className="text-gray-500 text-sm mr-2">Kategori:</span>
-              <span className="bg-[#D7E9AD] text-[#1C270C] px-3 py-1 rounded-full text-sm font-medium">
-                {newsItem.category}
-              </span>
-              <span className="mx-2 text-gray-300">|</span>
-              <span className="text-gray-700 font-sans" style={{ fontWeight: 400 }}>
-                {new Date(newsItem.date).toLocaleDateString("id-ID", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric"
-                })}
-              </span>
-            </div>
-            <div className="prose prose-sm text-black space-y-4 text-justify" style={{ fontSize: "0.875rem" }}>
-              {paragraphs.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
-            
+            <h2 className="text-xl mb-2 font-sans text-gray-700" style={{ fontWeight: 400 }}>
+              {newsItem.kategori}
+            </h2>
+            <h3 className="text-md mb-6 font-sans text-gray-500" style={{ fontWeight: 400 }}>
+              {newsItem.created_at && !isNaN(new Date(newsItem.created_at).getTime())
+                ? new Date(newsItem.created_at).toLocaleDateString("id-ID")
+                : "-"}
+            </h3>
+            <div
+              className="prose prose-sm text-black space-y-4 text-justify"
+              style={{ fontSize: "0.875rem" }}
+              dangerouslySetInnerHTML={{ __html: newsItem.description }}
+            />
+           
             {/* Share Button */}
             <div className="flex justify-center mt-8">
               <button
