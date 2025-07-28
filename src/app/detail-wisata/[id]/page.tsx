@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Camera, ChevronLeft, ChevronRight } from "lucide-react";
 import Footer from "@/components/Footer";
 
@@ -127,7 +128,11 @@ const TourismDetail: React.FC = () => {
       >
         <div className="container mx-auto px-4 md:px-6 h-full flex items-center">
           <div className="flex flex-col md:flex-row items-center justify-between w-full">
-            <div className="flex items-center space-x-4 justify-start">
+            <Link
+              href="/"
+              className="flex items-center space-x-4 justify-start cursor-pointer hover:opacity-90 transition-opacity"
+              aria-label="Kembali ke halaman utama Desa Karangrejo"
+            >
               <div className="w-10 md:w-16 h-10 md:h-16 relative flex-shrink-0">
                 <Image
                   src="/logo-desa.png"
@@ -145,8 +150,7 @@ const TourismDetail: React.FC = () => {
                   Kabupaten Blitar
                 </p>
               </div>
-            </div>
-
+            </Link>
             <div
               className="hidden md:block text-white text-right"
               aria-label={tourismData ? (tourismData.id === "gunung-kelud" ? `${tourismData.name} ${tourismData.name2}` : tourismData.name) : "Wisata Desa"}
