@@ -502,15 +502,15 @@ const TourismDetail: React.FC = () => {
               <div className="flex space-x-2 md:space-x-4">
                 <button
                   onClick={prevGalleryImage}
-                  className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors"
+                  className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
                 >
-                  <ChevronLeft className="w-6 h-6" />
+                  <ChevronLeft className="w-6 h-6 text-black" />
                 </button>
                 <button
                   onClick={nextGalleryImage}
-                  className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors"
+                  className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
                 >
-                  <ChevronRight className="w-6 h-6" />
+                  <ChevronRight className="w-6 h-6 text-black" />
                 </button>
               </div>
             </div>
@@ -556,22 +556,6 @@ const TourismDetail: React.FC = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Navigation Buttons for Mobile */}
-            <div className="flex justify-center space-x-4 mt-4 md:hidden">
-              <button
-                onClick={prevGalleryImage}
-                className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextGalleryImage}
-                className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
             </div>
           </div>
         </div>
