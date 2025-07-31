@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function LoginCard({
   email,
@@ -17,6 +18,7 @@ export default function LoginCard({
   loading?: boolean;
 }) {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="relative w-full flex flex-col items-center px-2">
@@ -40,6 +42,18 @@ export default function LoginCard({
         <h2 className="text-2xl sm:text-3xl font-medium text-[#1a357a] font-montserrat mb-2">
           Selamat Datang
         </h2>
+        <button
+          type="button"
+          className="w-full sm:w-auto px-4 py-2 rounded-md bg-gray-200 text-black text-sm sm:text-base font-semibold hover:bg-gray-300 transition hover:cursor-pointer flex items-center justify-center gap-2"
+          onClick={() => router.push("/")}
+          aria-label="Kembali ke halaman utama"
+          tabIndex={0}
+        >
+          <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
+            <path d="M15 10H5m0 0l5-5m-5 5l5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Kembali ke Homepage
+        </button>
         <form
           className="flex flex-col gap-4"
           onSubmit={e => {
@@ -102,7 +116,7 @@ export default function LoginCard({
           </div>
           <button
             type="submit"
-            className={`bg-[#1a357a] text-white font-semibold rounded-md py-2 mt-2 text-base text-black transition flex items-center justify-center ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-[#16306a]'} hover:cursor-pointer`}
+            className={`bg-[#1a357a] text-white font-semibold rounded-md py-2 mt-2 text-base transition flex items-center justify-center ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-[#16306a]'} hover:cursor-pointer`}
             disabled={loading}
           >
             {loading ? (

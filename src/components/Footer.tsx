@@ -29,7 +29,7 @@ const Footer: React.FC<{ id?: string }> = ({ id }) => {
             <div className="space-y-2">
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <Mail size={18} className="text-[#F6FAEB]" />
-                <span className="text-sm md:text-base">desakarangrejo15@gmail.com</span>
+                <span className="text-sm md:text-base">desakarangrejo62@gmail.com</span>
               </div>
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <Phone size={18} className="text-[#F6FAEB]" />
