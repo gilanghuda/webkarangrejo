@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function DashboardHeader({
   user,
@@ -20,7 +21,7 @@ export default function DashboardHeader({
   return (
     <>
       <header className="w-full bg-white flex items-center justify-between px-4 sm:px-8 py-3 border-b border-gray-100">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer" aria-label="Kembali ke halaman utama">
           <div className="w-7 h-7 rounded-md flex items-center justify-center bg-white">
             <Image
               src="/logo-desa.png"
@@ -34,7 +35,7 @@ export default function DashboardHeader({
           <span className="font-bold text-lg text-black">
             Admin Desa Karangrejo
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-4 flex-wrap">
           <span
             className="w-23 border-gray-100 bg-gray-100 text-black rounded-lg py-2 font-medium cursor-pointer hover:cursor-pointer flex items-center gap-1"
@@ -55,7 +56,7 @@ export default function DashboardHeader({
                 strokeLinecap="round"
               />
             </svg>
-             Logout    
+            Logout
           </span>
           <div className="w-8 h-8 bg-[#6c3ef4] rounded-full flex items-center justify-center border-4 border-black/20">
             <span className="text-white font-bold" title={user?.email || ""}>
